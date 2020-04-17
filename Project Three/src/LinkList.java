@@ -31,18 +31,50 @@ public class LinkList<T> implements Iterable<T> {
      * @param n node to add to end of list
      */
     public void appendList(Node<T> n) {
-        if (this.head != null) {
-            Node<T> iter = this.head;
-            while (iter.getNext() != null) {
+        //n.setNext(null);
+        if (head != null) 
+        {
+            Node<T> iter = head;
+            while (iter.getNext() != null) 
+            {
                 iter = iter.getNext();
             }
             iter.setNext(n);
             // iter.getNext().setNext(null);
             return;
-        } else {
-            this.head = n;
+        } 
+        else 
+        {
+            head = n;
             // head.setNext(null);
             return;
+        }
+    }
+
+    public void deleteNode(Node<T> node)
+    {
+        if(head == null)
+            return;
+        Node<T> temp = head;
+        if(node.compareTo(head) == 0)
+        {
+            head = temp.getNext();
+            return;
+        }
+        else
+        {
+            Node<T> current = head.getNext();
+            Node<T> prev = head;
+            while(current != null)
+            {
+                if(current.compareTo(node) == 0)
+                {
+                    prev.setNext(current.getNext());
+                    return;
+                }
+                prev = current;
+                current = current.getNext();
+            }
         }
     }
 
@@ -132,7 +164,7 @@ public class LinkList<T> implements Iterable<T> {
     }
 
     /**
-     * Searches linked list for node with specified name
+     * Searches linked list for node with specified name and returns node if found
      * 
      * @param name name of node data to search for
      * @return node that has the same name
@@ -152,17 +184,37 @@ public class LinkList<T> implements Iterable<T> {
     }
 
     /**
-     * Searches linked list for node with specified name
+     * Searches linked list for node with specified name and returns node if found
+     * 
+     * @param name name of node data to search for
+     * @return node that has the same name
+     */
+    public Node<T> searchList(Node<T> n) {
+        if (head == null)
+            return null;
+        else {
+            for (Node<T> iter = head; iter != null; iter = iter.getNext()) {
+                if (iter.compareTo(n) == 0) {
+                    return iter;
+                } else
+                    continue;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Searches linked list for node with specified name and returns boolean value
      * 
      * @param name name of node data to search for
      * @return true if node is in list, else false
      */
-    public boolean isInList(String name) {
+    public boolean isInList(Node<T> data) {
         if (head == null)
             return false;
         else {
             for (Node<T> iter = head; iter != null; iter = iter.getNext()) {
-                if (iter.compareTo(name) == 0) {
+                if (iter.compareTo(data) == 0) {
                     return true;
                 } else
                     continue;
@@ -202,6 +254,60 @@ public class LinkList<T> implements Iterable<T> {
                 }
             }
             return getHead();
+        }
+    }
+
+    public LinkList<T> copyList()
+    {
+        LinkList<T> copy = new LinkList<>();
+        Node<T> iter = head;
+        while(iter != null)
+        {
+            copy.appendList(iter);
+            iter = iter.getNext();
+        }
+        return copy;
+    }
+
+    /**
+     * Get node in linked list by index
+     * @param index index of node in linked list
+     * @return node in index
+     */
+    public Node<T> getNode(int index)
+    {
+        Node<T> iter = head;
+        for(int i = 0; i < index; i++)
+        {
+            iter = iter.getNext();
+        }
+        return iter;
+    }
+
+    public void displayTopThreePaths(Node<T> h, BufferedWriter bWriter) throws IOException
+    {
+        try
+        {
+            if(h == null)
+                return;
+            else
+            {
+                bWriter.write(h.toString());
+                h = h.getNext();
+                displayTopThreePaths(h, bWriter);
+            }
+        } catch (IOException exp) {
+            throw exp;
+        }
+    }
+
+    public void printList()
+    {
+        Node<T> iter = head;
+        while(iter != null)
+        {
+            System.out.print(iter.toString());
+            iter = iter.getNext();
         }
     }
 

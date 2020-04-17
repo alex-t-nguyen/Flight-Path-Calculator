@@ -7,6 +7,7 @@ public class Node<T> implements Comparable<Node<T>>{
     // Private data members
     private T data;
     private Node<T> next;
+    private boolean isVisited;
 
     /**
      * Default constructor of node
@@ -23,6 +24,7 @@ public class Node<T> implements Comparable<Node<T>>{
      */
     public Node(T d) {
         data = d;
+        next = null;
     }
 
     /**
@@ -55,12 +57,30 @@ public class Node<T> implements Comparable<Node<T>>{
     }
 
     /**
+     * Checks if node is visited or note
+     * @return boolean true if node is visited, else false
+     */
+    public boolean isVisited()
+    {
+        return isVisited;
+    }
+
+    /**
      * Sets payload of node
      * 
      * @param payload data of node
      */
     public void setData(T payload) {
         data = payload;
+    }
+
+    /**
+     * Sets visited value of node
+     * @param visited boolean value indicating if node is visited or not
+     */
+    public void setVisited(boolean visited)
+    {
+        isVisited = visited;
     }
 
     /**
@@ -97,19 +117,30 @@ public class Node<T> implements Comparable<Node<T>>{
 
     /**
      * Compares names of 2 node objects
-     * 
+     * Check if object in paramter is of class type "City" before comparing
      * @param obj Node to compare to
      * @return number to determine if names are equal or not
      */
     @Override
     public int compareTo(Node<T> obj) {
-        int result = ((City) this.data).getName().toLowerCase()
-                .compareTo(((City) obj.getData()).getName().toLowerCase());
-        if (result == 0) {
-            return 0;
-        } else {
-            return result;
-        }
+        //if(obj.getData() instanceof City)
+        //{
+            //System.out.println("SOURCE: " + ((City)this.data).getName().toLowerCase());
+            //System.out.println("SOURCE 2: " + ((City)obj.getData()).getName().toLowerCase());
+            int result = ((City)this.data).getName().toLowerCase().compareTo(((City)obj.getData()).getName().toLowerCase());
+            //System.out.println(result);
+            if (result == 0) {
+                return 0;
+            } else {
+                return result;
+            }
+        //}
+        /*
+        else
+        {
+            System.out.println("Obj not of type City");
+            return Integer.MIN_VALUE;
+        }*/
     }
 
     /**
@@ -127,5 +158,30 @@ public class Node<T> implements Comparable<Node<T>>{
         }
     }
 
-   
+   /**
+    * Overrided toString method to display city name
+    * @return city name
+    */
+    @Override
+    public String toString()
+    {
+        if(next == null)
+            return ((City)data).getName() + ". ";
+        else
+            return ((City)data).getName() + " -> ";
+    }
+
+    public Node<T> copyList(Node<T> headNode)
+    {
+        if(headNode == null)
+            return null;
+        else
+        {
+            T data = headNode.getData();
+            Node<T> newNode = new Node<T>(data);
+            Node<T> n = headNode.next;
+            newNode.setNext(copyList(n));
+            return newNode;
+        }
+    }
 }
