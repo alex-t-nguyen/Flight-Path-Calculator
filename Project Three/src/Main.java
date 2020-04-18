@@ -3,6 +3,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.PriorityQueue;
 import java.util.Scanner;
 
@@ -112,6 +113,8 @@ public class Main {
                 // Get all paths between 2 nodes and put into a graph
                 allPaths = graph.getAllPaths(new Node<City>(new City(origin,0,0)), new Node<City>(new City(destination,0,0)));            
                 
+                printGraph(allPaths);
+
                 // If no path available between nodes -> display error message and end program
                 if(allPaths.getAdjList().getHead() == null)
                 {
@@ -187,7 +190,26 @@ public class Main {
                                 // 3i) If smaller than root -> swap root and path
                                 if(pathStat.getCost() < maxHeap.peek().getCost())
                                 {
-                                    maxHeap.remove();
+                                    // If less than 2 unique cost paths and the biggest path -> add new path - else swap biggest and new path
+                                    Iterator<PathStat> pathValue = maxHeap.iterator();
+                                    int distinctPaths = 0;
+                                    PathStat temp = maxHeap.peek();
+                                    while(pathValue.hasNext() && distinctPaths < 2)
+                                    {
+                                        PathStat temp2 = pathValue.next();
+                                        if(temp2.getCost() != maxHeap.peek().getCost() && temp2.getCost() != temp.getCost()) 
+                                        {
+                                            distinctPaths++;
+                                            temp = temp2;
+                                        }
+                                    }
+                                    if(distinctPaths >= 2)
+                                    {
+                                        // Remove all instances of same cost path in heap if swapping one of them
+                                        PathStat maxInstance = maxHeap.remove();
+                                        while(pathStat.getCost() < maxHeap.peek().getCost() && maxHeap.peek().getCost() == maxInstance.getCost())
+                                            maxHeap.remove();
+                                    }
                                     maxHeap.add(pathStat);
                                 }
                                 // 3ii) If equal to root -> add path to heap (can have multiple 3rd place paths)
@@ -201,7 +223,26 @@ public class Main {
                                 // 3i) If smaller than root -> swap root and path
                                 if(pathStat.getTime() < maxHeap.peek().getCost())
                                 {
-                                    maxHeap.remove();
+                                    // If less than 2 unique time paths and the biggest path -> add new path - else swap biggest and new path
+                                    Iterator<PathStat> pathValue = maxHeap.iterator();
+                                    int distinctPaths = 0;
+                                    PathStat temp = maxHeap.peek();
+                                    while(pathValue.hasNext() && distinctPaths < 2)
+                                    {
+                                        PathStat temp2 = pathValue.next();
+                                        if(temp2.getCost() != maxHeap.peek().getCost() && temp2.getCost() != temp.getCost()) 
+                                        {
+                                            distinctPaths++;
+                                            temp = temp2;
+                                        }
+                                    }
+                                    if(distinctPaths >= 2)
+                                    {
+                                        // Remove all instances of same cost path in heap if swapping one of them
+                                        PathStat maxInstance = maxHeap.remove();
+                                        while(pathStat.getCost() < maxHeap.peek().getCost() && maxHeap.peek().getCost() == maxInstance.getCost())
+                                            maxHeap.remove();
+                                    }
                                     maxHeap.add(pathStat);
                                 }
                                 // 3ii) If equal to root -> add path to heap (can have multiple 3rd place paths)
@@ -275,7 +316,7 @@ public class Main {
      * Test method to print adjacency list graph
      * @param graph graph to print implemented as adjacency list
      */
-    public void printGraph(Graph<City> graph)
+    public static void printGraph(Graph<City> graph)
     {
         for(LinkList<City> iter : graph.getAdjList())
         {

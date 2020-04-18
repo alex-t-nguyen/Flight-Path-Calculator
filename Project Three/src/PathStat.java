@@ -47,6 +47,5 @@ public class PathStat {
     {
         this.index = index;
     }
-
 }
 

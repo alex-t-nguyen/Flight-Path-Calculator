@@ -1,9 +1,11 @@
 5
 Austin|Dallas|10|20
-Austin|Boston|30|40
-Boston|Austin|40|50
-Boston|Dallas|50|60
-Dallas|Chicago|60|30
-Chicago|Boston|40|20
-El Paso|Austin|20|10
-Chicago|El Paso|50|80
+Austin|Houston|30|40
+Chicago|Dallas|50|60
+Houston|Chicago|70|80
+Austin|Chicago|70|40
+
+150
+120
+150
+40

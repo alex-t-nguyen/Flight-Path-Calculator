@@ -1,6 +1,5 @@
-3
-Chicago|Boston|C
-Austin|El Paso|T
-Boston|Austin|C
+1
+Dallas|Houston|C
+
 
 

@@ -148,45 +148,7 @@ public class Graph<T> {
 
         // 4) Repeat while stack is not empty
         while(visitedNodes.isEmpty() == false)  
-        {
-            /*
-            iter.setVisited(true);
-            if(iter.getData().getHead().compareTo(destination) == 0)
-            {
-                pathsList.getAdjList().appendList(new Node<LinkList<T>>(path));
-                Node<LinkList<T>> nodeList = visitedNodes.pop();
-                Node<T> temp = nodeList.getData().getHead();
-                path.deleteNode(temp);
-                iter = visitedNodes.peek();
-            }
-            for(T cityObj : iter.getData())
-            {
-                Node<T> temp = new Node<>(cityObj);
-                while(iter.getData().getHead().compareTo(temp) != 0)  // Looks for current node in list
-                    iter = iter.getNext();
-                if(!iter.isVisited())
-                {
-                    path.appendList(temp);
-
-                    iter.setVisited(true);
-                    visitedNodes.push(iter);
-                    if(temp.compareTo(destination) == 0)
-                    {
-                        iter.setVisited(false);
-                        visitedNodes.pop();
-
-                        pathsList.getAdjList().appendList(new Node<LinkList<T>>(path));
-                        path.deleteNode(temp);
-                        continue;
-                    }
-                    else
-                    {
-
-                    }
-                }
-            }
-            */
-            
+        {    
             Node<LinkList<T>> linkListNodes;
             if(needNewAdjacentNodes)
             {
