@@ -1,0 +1,10 @@
+Flight 1: Chicago, Boston (Cost)
+Path 1: Chicago -> Dallas -> Austin -> Boston. Time: 90 Cost: 100.00
+Path 2: Chicago -> Dallas -> Boston. Time: 90 Cost: 110.00
+
+No flight plans available for flight Austin, El Paso
+
+Flight 3: Boston, Austin (Cost)
+Path 1: Boston -> Austin. Time: 40 Cost: 30.00
+Path 2: Boston -> Dallas -> Austin. Time: 80 Cost: 60.00
+

@@ -10,7 +10,6 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException, IOException {
         
         Scanner scanner;
-        BufferedWriter bWriter = null;
         String command;
         do
         {
@@ -48,12 +47,21 @@ public class Main {
             maxSize = Integer.parseInt(fileReader.nextLine());
             if(requestedFlightsReader.hasNextLine())
                 numRequestedFlights = Integer.parseInt(requestedFlightsReader.nextLine());
+            if(!requestedFlightsReader.hasNextLine() || numRequestedFlights == 0)
+            {
+                fileReader.close();
+                scanner.close();
+                requestedFlightsReader.close();
+                System.out.println("No flight requests available.");
+                return;
+            }
         }
         else
         {
             fileReader.close();
             scanner.close();
             requestedFlightsReader.close();
+            System.out.println("No flight data available.");
             return;
         }
 
@@ -61,7 +69,7 @@ public class Main {
         if(!output.exists())
             output.createNewFile();
         FileWriter outFile = new FileWriter(output);
-        bWriter = new BufferedWriter(outFile);
+        BufferedWriter bWriter = new BufferedWriter(outFile);
 
         // Add all flights in "flight data file" to graph
         for(int i = 0; i < maxSize; i++)    // Loop through all lines in file
@@ -97,21 +105,18 @@ public class Main {
                 String origin = flightData[0];
                 String destination = flightData[1];
                 char flightSortType = flightData[2].charAt(0);
-                int cost = 0;
-                int travelTime = 0;
+                int cost;
+                int travelTime;
                 int pathNumber = 0;
 
                 // Get all paths between 2 nodes and put into a graph
                 allPaths = graph.getAllPaths(new Node<City>(new City(origin,0,0)), new Node<City>(new City(destination,0,0)));            
                 
-                // If not path available between nodes -> display error message and end program
+                // If no path available between nodes -> display error message and end program
                 if(allPaths.getAdjList().getHead() == null)
                 {
                     System.out.println("No flight plans available for flight " + origin + ", " + destination);
-                    scanner.close();
-                    fileReader.close();
-                    requestedFlightsReader.close();
-                    return;
+                    bWriter.write("No flight plans available for flight " + origin + ", " + destination + "\n\n");
                 }
                 else
                 {
@@ -122,15 +127,18 @@ public class Main {
                         maxHeap = new PriorityQueue<>(3, new pathTimeComparator());
                     else
                     {
-                        System.out.println("'" + flightSortType + "' " + "is not a valid sorting character.");
+                        System.out.println("'" + flightSortType + "' " + "is not a valid sorting character for flight " + origin + ", " + destination + ".");
                         fileReader.close();
                         scanner.close();
                         requestedFlightsReader.close();
-                        return;
+
+                        continue;
                     }
                     // 1) Iterate through flight paths list (allPaths)
                     for(LinkList<City> verticalIter : allPaths.getAdjList())
                     {
+                        cost = 0;
+                        travelTime = 0;
                         Node<City> sourceIter = verticalIter.getHead();
                         Node<City> destinationIter = sourceIter.getNext();
                         while(destinationIter != null)
@@ -212,17 +220,9 @@ public class Main {
                     {
                         bWriter.write("Flight " + (i + 1) + ": " + origin + ", " + destination + " (Cost)\n");
                     }
-                    else if(flightSortType == 'T')
+                    else // if(flightSortType == 'T')
                     {
                         bWriter.write("Flight " + (i + 1) + ": " + origin + ", " + destination + " (Time)\n");
-                    }
-                    else
-                    {
-                        System.out.println("Not a valid flight sort type.");
-                        scanner.close();
-                        requestedFlightsReader.close();
-                        fileReader.close();
-                        return;
                     }
 
                     // 5) After all paths are in max heap, create a min heap and move objects (pathStat) from max heap to min heap
@@ -238,22 +238,29 @@ public class Main {
                     // 6) Check if min heap is empty
                     // 6i) If min heap is empty -> print error message (no flight path is available)
                     if(minHeap.isEmpty())
+                    {
                         System.out.println("No flight plans available for flight " + origin + ", " + destination);
+                        bWriter.write("No flight plans available for flight " + origin + ", " + destination + "\n\n");
+                    }
                     else
                     {
                         // 6ii) If min heap is not empty -> While min heap is not empty 
                         //     6a) Display path and its time and cost
+                        int pathRank = 1;
                         while(!minHeap.isEmpty())
                         {
                             PathStat pStat = minHeap.remove();
                             Node<LinkList<City>> path = allPaths.getAdjList().getNode(pStat.getIndex());
                             
                             // Display path
+                            bWriter.write("Path " + pathRank + ": ");
                             path.getData().displayTopThreePaths(path.getData().getHead(), bWriter);
 
                             // Display path's time and cost
                             bWriter.write("Time: " + pStat.getTime() + " Cost: " + String.format("%.2f",(double)pStat.getCost()) + "\n");
+                            pathRank++;
                         }
+                        bWriter.write("\n");
                     }
                 }
             }
